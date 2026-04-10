@@ -81,16 +81,118 @@ const exportBtn = document.getElementById("export-pdf");
 
 exportBtn.addEventListener("click", async () => {
   const element = preview.cloneNode(true);
-  element.style.padding = "40px";
-  element.style.maxWidth = "none";
-  element.style.background = "#ffffff";
+  element.style.cssText = `
+    padding: 40px;
+    max-width: none;
+    background: #ffffff;
+    color: #1e1e1e;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11pt;
+    line-height: 1.6;
+  `;
+
+  element.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((h) => {
+    h.style.color = "#111111";
+    h.style.borderBottom = "1px solid #e5e5e5";
+    h.style.paddingBottom = "0.2em";
+    h.style.marginTop = "1.5em";
+    h.style.marginBottom = "0.5em";
+  });
+
+  element.querySelectorAll("h1").forEach((h) => {
+    h.style.fontSize = "1.8em";
+  });
+  element.querySelectorAll("h2").forEach((h) => {
+    h.style.fontSize = "1.5em";
+  });
+  element.querySelectorAll("h3").forEach((h) => {
+    h.style.fontSize = "1.25em";
+  });
+
+  element.querySelectorAll("pre").forEach((pre) => {
+    pre.style.cssText = `
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+    `;
+    pre.querySelector("code").style.cssText = `
+      background: transparent;
+      color: #333333;
+      font-size: inherit;
+      padding: 0;
+    `;
+  });
+
+  element.querySelectorAll("code").forEach((code) => {
+    if (!code.closest("pre")) {
+      code.style.cssText = `
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        color: #c7254e;
+      `;
+    }
+  });
+
+  element.querySelectorAll("table").forEach((table) => {
+    table.style.cssText = `
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    `;
+    table.querySelectorAll("th, td").forEach((cell) => {
+      cell.style.cssText = `
+        border: 1px solid #d0d0d0;
+        padding: 8px 12px;
+        text-align: left;
+      `;
+    });
+    table.querySelectorAll("th").forEach((th) => {
+      th.style.background = "#f5f5f5";
+      th.style.fontWeight = "600";
+    });
+  });
+
+  element.querySelectorAll("blockquote").forEach((bq) => {
+    bq.style.cssText = `
+      margin: 1em 0;
+      padding: 0.5em 1em;
+      border-left: 4px solid #6366f1;
+      background: #f9f9f9;
+      color: #555555;
+    `;
+  });
+
+  element.querySelectorAll("img").forEach((img) => {
+    img.style.maxWidth = "100%";
+    img.style.height = "auto";
+    img.style.borderRadius = "4px";
+  });
+
+  element.querySelectorAll("a").forEach((a) => {
+    a.style.color = "#6366f1";
+    a.style.textDecoration = "none";
+  });
 
   const opt = {
-    margin: 10,
+    margin: 15,
     filename: "document.pdf",
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    pagebreak: {
+      mode: "avoid-all",
+      before: ".page-break-before",
+      after: ".page-break-after",
+    },
   };
 
   exportBtn.disabled = true;
