@@ -77,6 +77,17 @@ editor.addEventListener("keydown", (e) => {
   }
 });
 
+function syncScroll(source, target) {
+  const sourceMax = source.scrollHeight - source.clientHeight;
+  const targetMax = target.scrollHeight - target.clientHeight;
+  if (sourceMax <= 0 || targetMax <= 0) return;
+  const ratio = source.scrollTop / sourceMax;
+  target.scrollTop = ratio * targetMax;
+}
+
+editor.addEventListener("scroll", () => syncScroll(editor, preview));
+preview.addEventListener("scroll", () => syncScroll(preview, editor));
+
 const exportBtn = document.getElementById("export-pdf");
 
 exportBtn.addEventListener("click", async () => {
